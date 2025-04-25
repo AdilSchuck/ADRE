@@ -1,0 +1,29 @@
+configuração do servidor e clientes rsyslog
+
+escolher um endereço ip como: 192.168.0.10.
+
+abrir o arquivo de configuração do rsyslog com o comando:
+  sudo nano /etc/rsyslog.conf
+
+configurar o tcp:
+  
+  module(load="imtcp")
+  input(type="imtcp" port="514")
+
+depois de salvar e reiniciar para aplicar as mudanças:
+  sudo systemctl restart rsyslog
+
+verificar se o servidor esta funcionando:
+  sudo netstat -anupt | grep 514
+
+criar o arquivo principal em /etc/rsyslog.d/. com:
+  sudo nano /etc/rsyslog.d/50-client-remote.conf
+
+adicionar o comando para utilizar tcp:
+  *.* @@192.168.0.10:514  # para TCP 
+
+reiniciar o cliente também:
+  sudo systemctl restart rsyslog
+
+verificar se está recebendo os logs com:
+  sudo tail -f /var/log/syslog
